@@ -52,3 +52,15 @@ A: Schwarze Balken, bei Mouse-Over sind normal. Sollten auch weiße oder schwarz
 
 F: Ich habe Ärger bekommen, weil ich deine App auf der Arbeit benutzt habe, biegst du das für mich gerade?
 A: Nein! Die Benutzung auf eigenes Risiko. Bei meinem bisherigen Arbeitgebern (u.A. Fraunhofer Institut) war es jedoch so, dass das private Surfen, solange es die Produktivität nicht beeinträchtigt, geduldet wurde. Lest eure Firmen Vorschriften, klärt das mit euren Vorgesetzten oder lasst euch nicht erwischen. :smile: 
+
+
+**Update Logs:**
+------------------
+
+ - 01/02/2015 - 21:00: Nach dem es kurz einen Server Ausfall gab, stehen   die Dateien nun via Dropbox zur Verfügung!
+ - 02/02/2015 - 8:30: Die Version 1.0 wurde durch die Version 1.0b  ersetzt, welche in der Taskleiste als RocktbeansTV PIP angezeigt wird.  (Die alte Variante hatte lediglich einen anderen Titel in der  Taskleiste)
+ - 02/02/2015 - 11:00: (NEUE VERSION 1.5! ) (Änderungen: Speichert  Position und Skalierung, blendet Twitch Bedienelemente aus, blendet Bedienelemente bei Vollbild aus wenn Maus nicht bewegt wird, neues Icon Danke an e11e95
+ -  03/07/2015 - 12:00: Version 2.0 steht(endlich?) zur VerfügungNeu ist der Sendeplan und Twitch-Chat!
+ - 12/07/2015 - 21:00: Version 2.5 steht zur Verfügung! - Jetzt ohne TWITCH LOGO und diverse fixes für den Fullscreen Mode!
+ - 13/07/2015 - 11:26: Version 2.6 ist online, kleiner Fehler beim Parsen des Datums behoben (Sendeplan in 2.5 nicht abrufbar)
+ - 11/02/2016 - 11:00: Version 3.0 ist online, Nutzt jetzt die RocketbeansTV Sendeplan API! (Google Kalender API ist noch alls Fallback enthalten)

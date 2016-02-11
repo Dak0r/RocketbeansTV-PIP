@@ -1,50 +1,53 @@
 DIE ROCKETBEANS TV PICTURE IN PICTURE ANWENDUNG
 ---------------------------------------------------
 
-Das Projekt ist ein Visual Studio 2015 Projekt
+Das Projekt ist ein Visual Studio 2015 Projekt.
+
+Build (Rar): https://www.dropbox.com/s/hcnmztsomczx9r8/RocketBeansTV_PIP_3_0.rar?dl=1
+Build (Zip, Passwort "rocketbeans"): https://www.dropbox.com/s/bw72466aa9r4tgk/RocketBeansTV_PIP_3_0.zip?dl=1
 
 
 Was
 --------
-Bei Start der Anwendung öffnet sich ein Fenster in dem sich automatisch der Twitch.tv Stream der Rocketbeans öffnet. Das Fenster kann nach belieben verschoben oder in der Größe angepasst werden. **Das Fenster liegt, wie bei Picture in Picture beim TV, immer über allen anderen Anwendungen**, sodass man beim Spielen, Arbeiten oder Lernen weiterhin den Stream in einem Fenster verfolgen kann! Dabei braucht die Anwendung (anders als üblich) nicht den Eingabe Fokus zu haben. Das bedeutet ihr könnt ungehindert mit anderen Anwendung weiter arbeiten! Ferner kann seit Version 2, auch der Sendeplan sowie der Twitch Chat abgerufen werden!
+Bei Start der Anwendung Ã¶ffnet sich ein Fenster in dem sich automatisch der Twitch.tv Stream der Rocketbeans Ã¶ffnet. Das Fenster kann nach belieben verschoben oder in der GrÃ¶ÃŸe angepasst werden. **Das Fenster liegt, wie bei Picture in Picture beim TV, immer Ã¼ber allen anderen Anwendungen**, sodass man beim Spielen, Arbeiten oder Lernen weiterhin den Stream in einem Fenster verfolgen kann! Dabei braucht die Anwendung (anders als Ã¼blich) nicht den Eingabe Fokus zu haben. Das bedeutet ihr kÃ¶nnt ungehindert mit anderen Anwendung weiter arbeiten! Ferner kann seit Version 2, auch der Sendeplan sowie der Twitch Chat abgerufen werden!
 
 Wie
 -------
-Einfach Herunterladen und die Rocketbeans PIP.exe starten. Eine Installation wird nicht benötigt (ideal für PCs wo man keine vollen Admin rechte hat! ;) )
-Die Anwendung funktioniert, unter Windows immer und überall! Bei Spielen muss jedoch der Borderless bzw. Randlos Modus aktiviert werden, der normale Vollbild Modus würde die Anwendung überlagern.
+Einfach Herunterladen und die Rocketbeans PIP.exe starten. Eine Installation wird nicht benÃ¶tigt (ideal fÃ¼r PCs wo man keine vollen Admin rechte hat! ;) )
+Die Anwendung funktioniert, unter Windows immer und Ã¼berall! Bei Spielen muss jedoch der Borderless bzw. Randlos Modus aktiviert werden, der normale Vollbild Modus wÃ¼rde die Anwendung Ã¼berlagern.
 
-Hier ist noch ein Bild mit allen wichtigen Funktionen. Wenn ihr mit der Maus über das Fenster fahrt, werden alle Schaltflächen angezeigt. Verlasst ihr das Fenster mit der Maus, seht ihr nur den Stream.
+Hier ist noch ein Bild mit allen wichtigen Funktionen. Wenn ihr mit der Maus Ã¼ber das Fenster fahrt, werden alle SchaltflÃ¤chen angezeigt. Verlasst ihr das Fenster mit der Maus, seht ihr nur den Stream.
 
 [Anleitungs Bild!][5]
 
 ***Boss Taste ("Aus dem weg"-Taste): [Alt] + [Y]***
-Drückt man Alt und Y gleichzeitig verschwindet die Anwendung sofort vom Bildschirm und der Taskleiste. Der Sound läuft aber weiter, sodass ihr nichts vom Stream verpasst. Wenn die Tastenkombination nochmal gedrückt wird, kommt das Fenster wieder zum Vorschein.
+DrÃ¼ckt man Alt und Y gleichzeitig verschwindet die Anwendung sofort vom Bildschirm und der Taskleiste. Der Sound lÃ¤uft aber weiter, sodass ihr nichts vom Stream verpasst. Wenn die Tastenkombination nochmal gedrÃ¼ckt wird, kommt das Fenster wieder zum Vorschein.
 
 
 Hinweise & Known Issues:
 -----------------------------
-Neue Versionen, mit euren Wunsch-Features, sind in Arbeit und werden hier veröffentlicht, um informiert zu werden wenn dies passiert, könnt ihr mir auf Twitter folgen: https://twitter.com/DakorVR 
+Neue Versionen, mit euren Wunsch-Features, sind in Arbeit und werden hier verÃ¶ffentlicht, um informiert zu werden wenn dies passiert, kÃ¶nnt ihr mir auf Twitter folgen: https://twitter.com/DakorVR 
 
 Bewegt man die Maus langsam nach unten oder rechts aus dem Berreich, wird die GUI gelegentlich nicht ausgeblendet - Work Around: Maus schnell raus bewegen, oder nach Oben bzw. links raus bewegen.
 
-Hin und wieder kann es dazu kommen, dass der Stream nicht lädt. Dies ist kein Fehler meiner Seite (bis jemand das Gegenteil beweist :p ) sondern hängt mit Flash Player bzw. Windows Updates zusammen. Für gewöhnlich behebt sich das Problem von alleine in wenigen Tagen.
+Hin und wieder kann es dazu kommen, dass der Stream nicht lÃ¤dt. Dies ist kein Fehler meiner Seite (bis jemand das Gegenteil beweist :p ) sondern hÃ¤ngt mit Flash Player bzw. Windows Updates zusammen. FÃ¼r gewÃ¶hnlich behebt sich das Problem von alleine in wenigen Tagen.
  
-Benötigt [Flashplayer für den Internet Explorer ActiveX][6] und .Net Framework 4.0. Beides in Windows 8 (oder neuer) enthalten. Lediglich in den N-Versionen muss dies nach installiert werden.
+BenÃ¶tigt [Flashplayer fÃ¼r den Internet Explorer ActiveX][6] und .Net Framework 4.0. Beides in Windows 8 (oder neuer) enthalten. Lediglich in den N-Versionen muss dies nach installiert werden.
 
-.exe Dateien, die aus Archiven stammen welche nicht signiert sind, werden von Windows u.U. fälschlicher Weise als schädlich erkannt. Einfach auf "Weitere Information" -> "Trotzdem ausführen" klicken. [Die Datei ist viren frei][7].
+.exe Dateien, die aus Archiven stammen welche nicht signiert sind, werden von Windows u.U. fÃ¤lschlicher Weise als schÃ¤dlich erkannt. Einfach auf "Weitere Information" -> "Trotzdem ausfÃ¼hren" klicken. [Die Datei ist viren frei][7].
 
 
 FAQ:
 ======
 
 F: Zeigt diese Anwendung auch die Werbung an?
-A: Aber natürlich!
+A: Aber natÃ¼rlich!
 
 F: Ich kann die Anwendung nicht starten..
-A: Zum starten wird das .Net Framework 4.0 oder besser benötigt. Bei Windows 8 und neuer ist dies bereits vor installiert. Bei Windows 7 und älter, kann dies über die offizielle Microsoft Webseite heruntergeladen und installiert werden. Zudem wird der Adobe Flashplayer für den Internet Explorer ActiveX benötigt. Außerdem müssen die beiden .dll Dateien im gleichen Ordner wie die exe sein!
+A: Zum starten wird das .Net Framework 4.0 oder besser benÃ¶tigt. Bei Windows 8 und neuer ist dies bereits vor installiert. Bei Windows 7 und Ã¤lter, kann dies Ã¼ber die offizielle Microsoft Webseite heruntergeladen und installiert werden. Zudem wird der Adobe Flashplayer fÃ¼r den Internet Explorer ActiveX benÃ¶tigt. AuÃŸerdem mÃ¼ssen die beiden .dll Dateien im gleichen Ordner wie die exe sein!
 
-F: Bei mir werden weiße/schwarze Balken angezeigt..
-A: Schwarze Balken, bei Mouse-Over sind normal. Sollten auch weiße oder schwarze Balken vorhanden sein, wenn die Maus nicht über dem Bild ist (und alle Bedienelemente ausgeblendet sind), kann dies z.B. an der Windows Anzeige Skalierung liegen.
+F: Bei mir werden weiÃŸe/schwarze Balken angezeigt..
+A: Schwarze Balken, bei Mouse-Over sind normal. Sollten auch weiÃŸe oder schwarze Balken vorhanden sein, wenn die Maus nicht Ã¼ber dem Bild ist (und alle Bedienelemente ausgeblendet sind), kann dies z.B. an der Windows Anzeige Skalierung liegen.
 
-F: Ich habe Ärger bekommen, weil ich deine App auf der Arbeit benutzt habe, biegst du das für mich gerade?
-A: Nein! Die Benutzung auf eigenes Risiko. Bei meinem bisherigen Arbeitgebern (u.A. Fraunhofer Institut) war es jedoch so, dass das private Surfen, solange es die Produktivität nicht beeinträchtigt, geduldet wurde. Lest eure Firmen Vorschriften, klärt das mit euren Vorgesetzten oder lasst euch nicht erwischen. :smile: 
+F: Ich habe Ã„rger bekommen, weil ich deine App auf der Arbeit benutzt habe, biegst du das fÃ¼r mich gerade?
+A: Nein! Die Benutzung auf eigenes Risiko. Bei meinem bisherigen Arbeitgebern (u.A. Fraunhofer Institut) war es jedoch so, dass das private Surfen, solange es die ProduktivitÃ¤t nicht beeintrÃ¤chtigt, geduldet wurde. Lest eure Firmen Vorschriften, klÃ¤rt das mit euren Vorgesetzten oder lasst euch nicht erwischen. :smile: 

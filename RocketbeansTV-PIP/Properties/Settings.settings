@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RocketbeansPIP.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">640, 320</Value>
+    </Setting>
+    <Setting Name="Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">640, 320</Value>
+    </Setting>
+    <Setting Name="ChatState" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="LastNotifiedVersion" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

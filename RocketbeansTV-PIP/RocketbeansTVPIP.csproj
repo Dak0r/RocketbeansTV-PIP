@@ -63,10 +63,6 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.ShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\AxInterop.ShockwaveFlashObjects.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -150,9 +146,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="lib\Interop.ShockwaveFlashObjects.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="Resources\iconScale.png" />
     <None Include="Resources\iconScale1.png" />
     <None Include="Resources\iconMaximize.png" />
@@ -167,9 +160,6 @@
     <None Include="Resources\iconCrossSmall.png" />
     <None Include="Resources\iconCrossSmall2.png" />
     <None Include="Resources\iconCrossSmall3.png" />
-    <EmbeddedResource Include="lib\AxInterop.ShockwaveFlashObjects.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <Content Include="rbtv.ico" />
     <None Include="Resources\iconSendeplan.png" />
     <None Include="Resources\twitchchat.png" />
@@ -180,17 +170,6 @@
     <Content Include="rocketbeanstv-profile_image-389ff6f2d5ae9804-300x300.ico" />
     <Content Include="rocketbeanstv-profile_image-389ff6f2d5ae9804-300x300.png" />
     <Content Include="YTPIP.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="ShockwaveFlashObjects">
-      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

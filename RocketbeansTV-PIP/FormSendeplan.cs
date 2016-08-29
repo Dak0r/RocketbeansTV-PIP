@@ -201,9 +201,9 @@ namespace RocketbeansPIP
         {
             // RBTV Api uses X-WSSE Authentication
             // Should be executed asyncronously in the future, so it doesn't freeze the UI while Downloading...
-            string key = "ENTER YOUR RBTV KEY";
-            string secret = "ENTER YOUR SECRET";
-            string id = "00000000-0000-0000-0000-000000000000";
+            string key = "XXX";
+            string secret = "XXX";
+            string id = "XXX";
             string created = DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ssK").Trim(); // "2016-02-05T12:15:02+01:00";
             string nonce = id + created + RandomString(10).Trim();
             string sha1 = string.Join("", SHA1CryptoServiceProvider.Create().ComputeHash(Encoding.UTF8.GetBytes(nonce + created + secret)).Select(x => x.ToString("x2")));

@@ -14,13 +14,15 @@ using RocketbeansPIP.Properties;
 using System.Net.Security;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace RocketbeansPIP
 {
     public partial class Form1 : Form, IMessageFilter
     {
         private static Form1 instance;
-        public const float  CURRENT_VERSION = 3.0f;
+        public const float  CURRENT_VERSION = 4.0f;
 
         // Used for custom scaling method:
         private Point mouseposition;
@@ -31,6 +33,7 @@ namespace RocketbeansPIP
         private bool activated = true;
         private bool toolbarHidden = false;
         private FormSendeplan formSendeplan;
+        private bool sendeplanActive = false;
 
 
         // Twitter isc currently not supported.
@@ -38,7 +41,9 @@ namespace RocketbeansPIP
         private int chatSizeState = 0; // 0 = Disabled, 1 = Twitch, 2 = Twitter
 
         private int extraWidth = 300; //extra width used for calulating the perfect aspect ratio fot the stream, even with the chat displayed
-        private int etcPanelBaseWidth = 33;
+
+        private string channelName = "ROCKETBEANSTV";
+        private string ytStreamid = "";
 
         private int ExtraWidth
         {
@@ -46,7 +51,7 @@ namespace RocketbeansPIP
             set
             {
                 extraWidth = value;
-                etcPanel.Size = new Size(etcPanelBaseWidth + extraWidth, 27);
+                //etcPanel.Size = new Size(etcPanelBaseWidth + extraWidth, 27);
 
                 Size locSize = this.Size - etcPanel.Size;
                 Point location = new Point(locSize.Width, locSize.Height);
@@ -54,12 +59,79 @@ namespace RocketbeansPIP
             }
         }
 
+        #region StreamIDGetter
+        private void GetFirstStreamId(string html)
+        {
+            Regex regex = new Regex(@"(watch\?v=)\w+");
+            Match match = regex.Match(html);
+            string streamID = match.Value;
+            streamID = streamID.Replace("watch?v=", "");
+            if (streamID != ytStreamid)
+            {
+                ytStreamid = streamID;
+              //  MessageBox.Show("new stream: "+ytStreamid);
+                RocketbeansPIP.Properties.Settings.Default["LastStreamId"] = ytStreamid;
+                RocketbeansPIP.Properties.Settings.Default.Save();
+                webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=1&showinfo=0&theme=dark&iv_load_policy=1");
+                webBrowserMovie.Refresh();
+            }
+            
+            //return streamID;
+        }
+
+        public void DownloadVersionNumber(string url)
+        {
+            WebClient webclient = null;
+            try
+            {
+                webclient = new WebClient();
+
+                RemoteCertificateValidationCallback old = ServicePointManager.ServerCertificateValidationCallback;
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidRemoteCertificate);
+                webclient.DownloadStringCompleted += DownloadVersionNumberCompleted;
+                webclient.DownloadStringAsync(new Uri(url));
+                ServicePointManager.ServerCertificateValidationCallback = old;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (webclient != null)
+                {
+                    // webclient.Dispose();
+                    //  webclient = null;
+                }
+            }
+        }
+
+
+        public void DownloadVersionNumberCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            //byte[] raw = e.Result;
+            if (e.Error == null)
+            {
+                GetFirstStreamId(e.Result);
+            }
+            else
+            {
+                //instance.lblVersion.Text = "Version: " + CURRENT_VERSION + " [O]";
+                MessageBox.Show("Connection error");
+            }
+            ((WebClient)sender).Dispose();
+
+        }
+        #endregion
         //private Point browserInitPosition;  // Was used for an early version for twitter support, using twitters api is probably better. The browser had to be moved so that the twitter feed was fully shown in the small window
 
         public Form1()
         {
             instance = this;
+            SetBrowserFeatureControl();
             InitializeComponent();
+
 
             // Register Handlers to detect mouse over, mouse leaving, mouse entering etc!
             // The Forms handlers don't detect mouse events in children
@@ -74,8 +146,7 @@ namespace RocketbeansPIP
             formSendeplan = new FormSendeplan();
             this.AddOwnedForm(formSendeplan);
 
-
-
+            DownloadVersionNumber("https://www.youtube.com/user/" + channelName + "/videos?sort=dd&view=2&shelf_id=4&live_view=501");
             // TWITCH PLAYERS
 
             // standard:
@@ -83,7 +154,19 @@ namespace RocketbeansPIP
             // axShockwaveFlash1.FlashVars = "id=ember860-flash-player&hide_chat=true&channel=rocketbeanstv&embed=0&auto_play=true&device_id=6e2bb194806590dc&test_environment_url=http://www.twitch.tv&eventsCallback=Twitch.player.FlashPlayer2.callbacks.callback0";
 
             // this one doesnt't show the twitch logo:
-            axShockwaveFlash1.Movie = "http://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf?channel=rocketbeanstv&playerType=facebook";
+
+            //OLD TWITCH
+            //axShockwaveFlash1.Movie = "http://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf?channel=rocketbeanstv&playerType=facebook";
+            //NEW YOUTUBE
+
+            //axShockwaveFlash1.Movie = "https://www.youtube.com/v/" + ytStreamid + "?version=3&autoplay=true"; // Works but is depricated
+
+
+            ytStreamid = (string)Properties.Settings.Default["LastStreamId"]; //get last stream id
+            webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=0&showinfo=0&theme=dark&iv_load_policy=1&fs=0"); //iv_load_policy 3 = hide video notes
+            webBrowserMovie.Refresh();
+
+            //
 
             // register boss key!
             setHotKey(KeyModifiers.Alt, Keys.Y);
@@ -91,18 +174,12 @@ namespace RocketbeansPIP
             // Display current verison and kick off Version Check
             lblVersion.Text = "Version: " + CURRENT_VERSION;
             tmrAsyncLoading.Start();
-
-
-            //Set perfect ratio
-            Size tmpSize = this.Size;
-            tmpSize = (Size)RocketbeansPIP.Properties.Settings.Default["Size"]; // Load last window size
-            tmpSize.Width = (int)((tmpSize.Height) * 1.7778f); // 1.777778f = 16/9, probalby causes rounding errors
-            tmpSize.Width += ExtraWidth;                        //add ChatSize (ExtraWidth) to perfect aspect ratio
-            this.Size = tmpSize;
-            axShockwaveFlash1.Width = Size.Width - ExtraWidth;  //set size of flash object without ChatSize (ExtraWidth)
+            SetPerfectAspectRatio();
 
             this.Location = (Point)Properties.Settings.Default["Location"]; //Load last window location
             ChatState = (int)Properties.Settings.Default["ChatState"]; //Load last chat state
+
+
 
             // We need the display resultion, so that the schedule will never open outside of the screen
             Screen screen = GetCurrentScreen();
@@ -112,6 +189,16 @@ namespace RocketbeansPIP
             }
         }
 
+        private void SetPerfectAspectRatio()
+        {
+            //Set perfect ratio
+            Size tmpSize = this.Size;
+            tmpSize = (Size)RocketbeansPIP.Properties.Settings.Default["Size"]; // Load last window size
+            tmpSize.Width = (int)((tmpSize.Height) * 1.7778f); // 1.777778f = 16/9, probalby causes rounding errors
+            tmpSize.Width += ExtraWidth;                        //add ChatSize (ExtraWidth) to perfect aspect ratio
+            this.Size = tmpSize;
+            webBrowserMovie.Width = Size.Width - ExtraWidth;  //set size of flash object without ChatSize (ExtraWidth)
+        }
 
         private int ChatState
         {
@@ -136,8 +223,10 @@ namespace RocketbeansPIP
                     // webBrowser1.Location = browserInitPosition;
                     webBrowserChat.Show();
                     ExtraWidth = 300;
-                    webBrowserChat.Url = new Uri("http://www.twitch.tv/rocketbeanstv/chat?popout=");
-                    btnTwitchChat.BackgroundImage = Resources.iconChatTwitch;
+                    //webBrowserChat.Url = new Uri("http://www.twitch.tv/rocketbeanstv/chat?popout=");
+                    //webBrowserChat.Url = new Uri("https://www.youtube.com/live_chat?v="+ytStreamid);
+                    webBrowserChat.Url = new Uri("https://www.youtube.com/live_chat?v="+ytStreamid+"&from_gaming=1&dark_theme=1&is_popout=1");
+                    btnTwitchChat.BackgroundImage = Resources.twitchchat1;//Resources.iconChatTwitch;
                     webBrowserChat.ScrollBarsEnabled = false;
                     webBrowserChat.IsWebBrowserContextMenuEnabled = false;
                 }
@@ -169,7 +258,7 @@ namespace RocketbeansPIP
                     toolbarHidden = value;
                     if (toolbarHidden)
                     {
-                        axShockwaveFlash1.Height += 31;
+                      //  webBrowserMovie.Height += 31;
                         if (chatState == 1)
                         {
                             // webBrowser1.Height += 135;
@@ -183,7 +272,7 @@ namespace RocketbeansPIP
                     }
                     else
                     {
-                        axShockwaveFlash1.Height -= 31;
+                      //  webBrowserMovie.Height -= 31;
                         if (chatSizeState == 1)
                         {
                             //   webBrowser1.Height -= 135;
@@ -203,11 +292,11 @@ namespace RocketbeansPIP
             if (WindowState != FormWindowState.Maximized)
             {
                 Size tmpSize = this.Size;
-                tmpSize.Width = (int)((tmpSize.Height) * 1.7778f);  // 1.777778f = 16/9, probalby causes rounding errors
+                tmpSize.Width = (int)Math.Round((tmpSize.Height) * 1.7777777777777777778f);  // 1.777778f = 16/9, probalby causes rounding errors
                 tmpSize.Width += ExtraWidth;
                 this.Size = tmpSize;
             }
-            axShockwaveFlash1.Width = Size.Width - ExtraWidth;
+            webBrowserMovie.Width = Size.Width - ExtraWidth;
         }
 
         private void btnTwitchChat_Click(object sender, EventArgs e)
@@ -240,7 +329,10 @@ namespace RocketbeansPIP
             if (menuPanel.Visible)
             {
                 menuPanel.Hide();
-                Cursor.Hide();
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    Cursor.Hide();
+                }
                 Debug.WriteLine("Hide GUI after Time!");
             }
 
@@ -276,7 +368,7 @@ namespace RocketbeansPIP
             {
                 this.WindowState = FormWindowState.Maximized;
                 tmrGUI.Start();
-                axShockwaveFlash1.Width = this.Size.Width - ExtraWidth;
+                webBrowserMovie.Width = this.Size.Width - ExtraWidth;
                 btnScale.Hide();
             }
             else
@@ -284,7 +376,7 @@ namespace RocketbeansPIP
                 this.WindowState = FormWindowState.Normal;
                 tmrGUI.Stop();
                 Cursor.Show();
-                axShockwaveFlash1.Width = this.Size.Width - ExtraWidth;
+                webBrowserMovie.Width = this.Size.Width - ExtraWidth;
                 btnScale.Show();
 
                 UpdateSize();
@@ -309,9 +401,11 @@ namespace RocketbeansPIP
         {
             if (!formSendeplan.Visible)
             {
+                tmrGUI.Stop();
                 this.TopMost = false;
                 tmrTopMost.Enabled = false;
                 formSendeplan.Show();
+                sendeplanActive = true;
                 Point mouse = MousePosition;
 
                 // The following code takes care, that schedule is never shown outside of the current screen!
@@ -358,8 +452,10 @@ namespace RocketbeansPIP
                 formSendeplan.Hide();
                 formSendeplan.TopMost = false;
             }
+            sendeplanActive = false;
             tmrTopMost.Enabled = false;
             resetTopMost();
+            tmrGUI.Start();
         }
 
         private Screen GetCurrentScreen()
@@ -436,7 +532,7 @@ namespace RocketbeansPIP
                 tmpSize.Height = mouseScale.Height + mousePos.Y;
                 tmpSize.Width = mouseScale.Width + mousePos.X;
 
-                axShockwaveFlash1.Width = this.Size.Width - ExtraWidth;
+                webBrowserMovie.Width = this.Size.Width - ExtraWidth;
 
                 if (tmpSize.Width - ExtraWidth < 270)
                 {
@@ -460,7 +556,7 @@ namespace RocketbeansPIP
                 {
                     //Change in Height is bigger
                     //tmpSize.Width = (int) ((tmpSize.Height-31) * 1.7778f);
-                    tmpSize.Width = (int)((tmpSize.Height) * 1.7778f) + ExtraWidth;
+                    tmpSize.Width = (int)((tmpSize.Height) * 1.7777777777777777777778f) + ExtraWidth;
                 }
 
                 tmpSize.Width -= ExtraWidth;
@@ -469,6 +565,8 @@ namespace RocketbeansPIP
                 tmpSize.Width += ExtraWidth;
                 this.Size = tmpSize;
                 RocketbeansPIP.Properties.Settings.Default.Save();
+                webBrowserMovie.Width = Size.Width - ExtraWidth;  //set size of flash object without ChatSize (ExtraWidth)
+                // SetPerfectAspectRatio();
                 //lastMouse = mousePos;
             }
         }
@@ -527,21 +625,17 @@ namespace RocketbeansPIP
 
                     if (!menuPanel.Visible)
                     {
-                        if (this.WindowState != FormWindowState.Maximized)
+                        this.Form1_MouseEnter(null, null);
+
+                        Cursor.Show();
+                        tmrGUI.Stop();
+                        if (!formSendeplan.Visible)
                         {
-                            this.Form1_MouseEnter(null, null);
-                        }
-                        else if (MousePosition != lastMousePos)
-                        {
-                            this.Form1_MouseEnter(null, null);
-                            tmrGUI.Stop();
                             tmrGUI.Start();
-                            Cursor.Show();
-                            Debug.WriteLine("Timer Reset!");
-                            lastMousePos = MousePosition;
                         }
                     }
-                    //  System.Diagnostics.Debug.WriteLine("CustoMove");
+
+                    //  System.Diagnostics.Debug.WriteLine("CustomMove");
                 }
                 return false;
             }
@@ -717,6 +811,96 @@ namespace RocketbeansPIP
                     break;
             }
             base.WndProc(ref message);
+        }
+        #endregion
+
+
+        #region WebBrwoserForm
+        private void SetBrowserFeatureControlKey(string feature, string appName, uint value)
+        {
+            using (var key = Registry.CurrentUser.CreateSubKey(
+                String.Concat(@"Software\Microsoft\Internet Explorer\Main\FeatureControl\", feature),
+                RegistryKeyPermissionCheck.ReadWriteSubTree))
+            {
+                key.SetValue(appName, (UInt32)value, RegistryValueKind.DWord);
+            }
+        }
+
+        private void SetBrowserFeatureControl()
+        {
+            // http://msdn.microsoft.com/en-us/library/ee330720(v=vs.85).aspx
+
+            // FeatureControl settings are per-process
+            var fileName = System.IO.Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
+
+            // make the control is not running inside Visual Studio Designer
+            if (String.Compare(fileName, "devenv.exe", true) == 0 || String.Compare(fileName, "XDesProc.exe", true) == 0)
+                return;
+
+            SetBrowserFeatureControlKey("FEATURE_BROWSER_EMULATION", fileName, GetBrowserEmulationMode()); // Webpages containing standards-based !DOCTYPE directives are displayed in IE10 Standards mode.
+            SetBrowserFeatureControlKey("FEATURE_AJAX_CONNECTIONEVENTS", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_ENABLE_CLIPCHILDREN_OPTIMIZATION", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_MANAGE_SCRIPT_CIRCULAR_REFS", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_DOMSTORAGE ", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_GPU_RENDERING ", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_IVIEWOBJECTDRAW_DMLT9_WITH_GDI  ", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_DISABLE_LEGACY_COMPRESSION", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_LOCALMACHINE_LOCKDOWN", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_BLOCK_LMZ_OBJECT", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_BLOCK_LMZ_SCRIPT", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_DISABLE_NAVIGATION_SOUNDS", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_SCRIPTURL_MITIGATION", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_SPELLCHECKING", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_STATUS_BAR_THROTTLING", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_TABBED_BROWSING", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_VALIDATE_NAVIGATE_URL", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_WEBOC_DOCUMENT_ZOOM", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_WEBOC_POPUPMANAGEMENT", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_WEBOC_MOVESIZECHILD", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_ADDON_MANAGEMENT", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_WEBSOCKET", fileName, 1);
+            SetBrowserFeatureControlKey("FEATURE_WINDOW_RESTRICTIONS ", fileName, 0);
+            SetBrowserFeatureControlKey("FEATURE_XMLHTTP", fileName, 1);
+        }
+
+        private UInt32 GetBrowserEmulationMode()
+        {
+            int browserVersion = 7;
+            using (var ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
+                RegistryKeyPermissionCheck.ReadSubTree,
+                System.Security.AccessControl.RegistryRights.QueryValues))
+            {
+                var version = ieKey.GetValue("svcVersion");
+                if (null == version)
+                {
+                    version = ieKey.GetValue("Version");
+                    if (null == version)
+                        throw new ApplicationException("Microsoft Internet Explorer is required!");
+                }
+                int.TryParse(version.ToString().Split('.')[0], out browserVersion);
+            }
+
+            UInt32 mode = 11000; // Internet Explorer 11. Webpages containing standards-based !DOCTYPE directives are displayed in IE11 Standards mode. Default value for Internet Explorer 11.
+            switch (browserVersion)
+            {
+                case 7:
+                    mode = 7000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode. Default value for applications hosting the WebBrowser Control.
+                    break;
+                case 8:
+                    mode = 8000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode. Default value for Internet Explorer 8
+                    break;
+                case 9:
+                    mode = 9000; // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode. Default value for Internet Explorer 9.
+                    break;
+                case 10:
+                    mode = 10000; // Internet Explorer 10. Webpages containing standards-based !DOCTYPE directives are displayed in IE10 mode. Default value for Internet Explorer 10.
+                    break;
+                default:
+                    // use IE11 mode by default
+                    break;
+            }
+
+            return mode;
         }
         #endregion
     }

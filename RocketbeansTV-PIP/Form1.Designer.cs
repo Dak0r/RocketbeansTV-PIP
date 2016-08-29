@@ -33,7 +33,6 @@ namespace RocketbeansPIP
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tmrTopMost = new System.Windows.Forms.Timer(this.components);
             this.tmrGUI = new System.Windows.Forms.Timer(this.components);
-            this.axShockwaveFlash1 = new AxShockwaveFlashObjects.AxShockwaveFlash();
             this.etcPanel = new System.Windows.Forms.Panel();
             this.btnScale = new System.Windows.Forms.Button();
             this.menuPanel = new System.Windows.Forms.Panel();
@@ -47,7 +46,7 @@ namespace RocketbeansPIP
             this.lblVersion = new System.Windows.Forms.Label();
             this.tmrAsyncLoading = new System.Windows.Forms.Timer(this.components);
             this.webBrowserChat = new System.Windows.Forms.WebBrowser();
-            ((System.ComponentModel.ISupportInitialize)(this.axShockwaveFlash1)).BeginInit();
+            this.webBrowserMovie = new System.Windows.Forms.WebBrowser();
             this.etcPanel.SuspendLayout();
             this.menuPanel.SuspendLayout();
             this.SuspendLayout();
@@ -62,18 +61,6 @@ namespace RocketbeansPIP
             this.tmrGUI.Interval = 1000;
             this.tmrGUI.Tick += new System.EventHandler(this.tmrGUI_Tick);
             // 
-            // axShockwaveFlash1
-            // 
-            this.axShockwaveFlash1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.axShockwaveFlash1.Enabled = true;
-            this.axShockwaveFlash1.Location = new System.Drawing.Point(0, 0);
-            this.axShockwaveFlash1.Margin = new System.Windows.Forms.Padding(0);
-            this.axShockwaveFlash1.Name = "axShockwaveFlash1";
-            this.axShockwaveFlash1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axShockwaveFlash1.OcxState")));
-            this.axShockwaveFlash1.Size = new System.Drawing.Size(520, 395);
-            this.axShockwaveFlash1.TabIndex = 0;
-            // 
             // etcPanel
             // 
             this.etcPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -81,9 +68,9 @@ namespace RocketbeansPIP
             this.etcPanel.BackgroundImage = global::RocketbeansPIP.Properties.Resources.twitchBG_neu;
             this.etcPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.etcPanel.Controls.Add(this.btnScale);
-            this.etcPanel.Location = new System.Drawing.Point(617, 368);
+            this.etcPanel.Location = new System.Drawing.Point(605, 358);
             this.etcPanel.Name = "etcPanel";
-            this.etcPanel.Size = new System.Drawing.Size(33, 27);
+            this.etcPanel.Size = new System.Drawing.Size(45, 37);
             this.etcPanel.TabIndex = 5;
             // 
             // btnScale
@@ -98,7 +85,7 @@ namespace RocketbeansPIP
             this.btnScale.Image = global::RocketbeansPIP.Properties.Resources.iconScale3;
             this.btnScale.Location = new System.Drawing.Point(0, 0);
             this.btnScale.Name = "btnScale";
-            this.btnScale.Size = new System.Drawing.Size(33, 27);
+            this.btnScale.Size = new System.Drawing.Size(45, 37);
             this.btnScale.TabIndex = 4;
             this.btnScale.UseVisualStyleBackColor = false;
             // 
@@ -120,7 +107,7 @@ namespace RocketbeansPIP
             this.menuPanel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.menuPanel.Location = new System.Drawing.Point(0, 0);
             this.menuPanel.Name = "menuPanel";
-            this.menuPanel.Size = new System.Drawing.Size(650, 40);
+            this.menuPanel.Size = new System.Drawing.Size(650, 42);
             this.menuPanel.TabIndex = 2;
             this.menuPanel.VisibleChanged += new System.EventHandler(this.menuPanel_VisibleChanged);
             // 
@@ -226,7 +213,7 @@ namespace RocketbeansPIP
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // label2
+            // lblCredit
             // 
             this.lblCredit.BackColor = System.Drawing.Color.Transparent;
             this.lblCredit.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -258,10 +245,8 @@ namespace RocketbeansPIP
             // 
             // webBrowserChat
             // 
-            this.webBrowserChat.AllowWebBrowserDrop = false;
             this.webBrowserChat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.webBrowserChat.IsWebBrowserContextMenuEnabled = false;
             this.webBrowserChat.Location = new System.Drawing.Point(350, -50);
             this.webBrowserChat.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowserChat.Name = "webBrowserChat";
@@ -269,8 +254,20 @@ namespace RocketbeansPIP
             this.webBrowserChat.ScrollBarsEnabled = false;
             this.webBrowserChat.Size = new System.Drawing.Size(300, 445);
             this.webBrowserChat.TabIndex = 6;
-            this.webBrowserChat.Url = new System.Uri("", System.UriKind.Relative);
+            this.webBrowserChat.Url = new System.Uri("https://www.youtube.com/live_chat?v=OH_shyI3IGM&is_popout=1", System.UriKind.Absolute);
             this.webBrowserChat.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
+            // 
+            // webBrowserMovie
+            // 
+            this.webBrowserMovie.AllowWebBrowserDrop = false;
+            this.webBrowserMovie.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.webBrowserMovie.Location = new System.Drawing.Point(0, 0);
+            this.webBrowserMovie.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowserMovie.Name = "webBrowserMovie";
+            this.webBrowserMovie.ScrollBarsEnabled = false;
+            this.webBrowserMovie.Size = new System.Drawing.Size(518, 395);
+            this.webBrowserMovie.TabIndex = 7;
             // 
             // Form1
             // 
@@ -280,7 +277,7 @@ namespace RocketbeansPIP
             this.ClientSize = new System.Drawing.Size(650, 395);
             this.Controls.Add(this.etcPanel);
             this.Controls.Add(this.menuPanel);
-            this.Controls.Add(this.axShockwaveFlash1);
+            this.Controls.Add(this.webBrowserMovie);
             this.Controls.Add(this.webBrowserChat);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -291,7 +288,6 @@ namespace RocketbeansPIP
             this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.axShockwaveFlash1)).EndInit();
             this.etcPanel.ResumeLayout(false);
             this.menuPanel.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -299,8 +295,6 @@ namespace RocketbeansPIP
         }
 
         #endregion
-
-        private AxShockwaveFlashObjects.AxShockwaveFlash axShockwaveFlash1;
         private System.Windows.Forms.Timer tmrTopMost;
         private System.Windows.Forms.Timer tmrGUI;
         private System.Windows.Forms.Panel menuPanel;
@@ -316,6 +310,7 @@ namespace RocketbeansPIP
         private System.Windows.Forms.Button btnTwitchChat;
         private System.Windows.Forms.Timer tmrAsyncLoading;
         private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.WebBrowser webBrowserMovie;
     }
 }
 

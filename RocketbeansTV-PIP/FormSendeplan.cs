@@ -63,7 +63,7 @@ namespace RocketbeansPIP
         }
         private void SwitchApi()
         {
-            MessageBox.Show("Ein Fehler ist aufgetreten. Werde zurückfallen auf " + (useRBTVAPI ? "Google" : "RBTV") + " API. " + System.Environment.NewLine + "Fehler: Empty Response.");
+          //  MessageBox.Show("Ein Fehler mit dem Sendeplan ist aufgetreten. Werde zurückfallen auf " + (useRBTVAPI ? "Google" : "RBTV") + " API.");
             useRBTVAPI = !useRBTVAPI; //use google as fallback for rbtv api and rbtvapi as fallback for google.
         }
 
@@ -100,13 +100,13 @@ namespace RocketbeansPIP
                 {
                     JObject resultroot = JObject.Parse(jsonSendeplan);
                     result = (JArray)resultroot["schedule"];
-                    lblSendeplanTitle.Text = "Sendeplan vom " + DateTime.Parse((string)result[0]["timeStart"], CultureInfo.CreateSpecificCulture("en-us")).ToString("dd.MM.yyyy") + "\n\n";
+                    lblSendeplanTitle.Text = "Sendeplan vom " + DateTime.Parse((string)result[0]["timeStart"], CultureInfo.CreateSpecificCulture("en-us")).ToString("dd.MM.yyyy") + " (RBTV Sendeplan)\n\n";
                 }
                 else
                 {
                     JObject resultroot = JObject.Parse(jsonSendeplan);
                     result = (JArray)resultroot["items"];
-                    lblSendeplanTitle.Text = "Sendeplan vom " + DateTime.Parse((string)result[0]["start"]["dateTime"], CultureInfo.CreateSpecificCulture("en-us")).ToString("dd.MM.yyyy") + "\n\n";
+                    lblSendeplanTitle.Text = "Sendeplan vom " + DateTime.Parse((string)result[0]["start"]["dateTime"], CultureInfo.CreateSpecificCulture("en-us")).ToString("dd.MM.yyyy") + " (Google Kalender)\n\n";
                 }
 
                 // remove all existing labels, if there are too many labels in the flow control
@@ -157,7 +157,7 @@ namespace RocketbeansPIP
                     else
                     {
                         // Parse json and update label based on google calender syntax
-                        CreateLabelFromGoogleJson(item, out start, out end, out tmpLabel);
+                        CreateLabelFromGoogleJson(item, out start, out end, tmpLabel);
                     }
 
                     // Mark current time in DarkRed
@@ -191,6 +191,7 @@ namespace RocketbeansPIP
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 SwitchApi();
                 Hide();
             }
@@ -203,7 +204,7 @@ namespace RocketbeansPIP
             // Should be executed asyncronously in the future, so it doesn't freeze the UI while Downloading...
             string key = "XXX";
             string secret = "XXX";
-            string id = "XXX";
+            string id = "00000000-0000-0000-0000-000000000000";
             string created = DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ssK").Trim(); // "2016-02-05T12:15:02+01:00";
             string nonce = id + created + RandomString(10).Trim();
             string sha1 = string.Join("", SHA1CryptoServiceProvider.Create().ComputeHash(Encoding.UTF8.GetBytes(nonce + created + secret)).Select(x => x.ToString("x2")));
@@ -230,7 +231,6 @@ namespace RocketbeansPIP
             }
             catch (Exception ex)
             {
-                //MessageBox.Show("Error: "+ex.Message);
                 SwitchApi();
             }
         }
@@ -297,6 +297,7 @@ namespace RocketbeansPIP
         {
             if (e.Error == null)
             {
+                
                 instance.jsonSendeplan = e.Result;
                 instance.UpdateLabels();
                 instance.lastDownload = DateTime.Now;
@@ -308,11 +309,10 @@ namespace RocketbeansPIP
             }
         }
 
-        private static void CreateLabelFromGoogleJson(JObject item, out DateTime start, out DateTime end, out Label tmpLabel)
+        private static void CreateLabelFromGoogleJson(JObject item, out DateTime start, out DateTime end, Label tmpLabel)
         {
             start = DateTime.Parse((string)item["start"]["dateTime"], CultureInfo.CreateSpecificCulture("en-us"));
             end = DateTime.Parse((string)item["end"]["dateTime"], CultureInfo.CreateSpecificCulture("en-us"));
-            tmpLabel = new Label();
             string summary = (string)item["summary"];
 
             tmpLabel.ForeColor = Color.White;
@@ -324,6 +324,7 @@ namespace RocketbeansPIP
             {
                 tmpLabel.ForeColor = Color.LightSalmon;
             }
+            
             tmpLabel.Text = start.ToString("HH:mm") + " Uhr - " + System.Web.HttpUtility.HtmlDecode(summary);
         }
         #endregion

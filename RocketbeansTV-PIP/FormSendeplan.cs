@@ -11,13 +11,15 @@ using System.Security.Cryptography;
 
 namespace RocketbeansPIP
 {
+
     public partial class FormSendeplan : Form
     {
+// IF YOU ARE JUST HERE FOR THE RBTV CODE, SCROLL DOWN TO THE RBTV SENDEPLAN API REGION (~line 200)
+#region UiStuff
         public static FormSendeplan instance;
 
         private bool useRBTVAPI = true; // if false Google API will be used
-        //The GUI and the "Current Show" Maker will be updated every time this From gets shown. But we'll download new json data only if minDefferenceMinutes - Minutes have passed since the last download, because it shouldn't change that much.
-        private int minDefferenceMinutes = 15;
+        private int minDefferenceMinutes = 15; //The GUI and the "Current Show" marker will be updated every time. But we'll download new json data only if minDefferenceMinutes have passed since the last download
         private DateTime lastDownload;
         private bool downloadedScheduleDataOnce = false;
 
@@ -196,8 +198,8 @@ namespace RocketbeansPIP
                 Hide();
             }
         }
-
-        #region RBTV Sendeplan API
+#endregion
+#region RBTV Sendeplan API
         private void DownloadScheduleDataFromRBTVApi()
         {
             // RBTV Api uses X-WSSE Authentication
@@ -272,10 +274,10 @@ namespace RocketbeansPIP
             }
             return sb.ToString();
         }
-        #endregion
+#endregion
 
 
-        #region GOOGLE CALENDER API
+#region GOOGLE CALENDER API
         private static void DownloadScheduleDataFromGoogle()
         {
             string startTime = DateTime.Now.ToString("yyyy-MM-dd\\T") + "06:00:00+01:00";//yyyy-mm-dd\\/dd\\/yyyy h\\:mm tt"
@@ -327,10 +329,11 @@ namespace RocketbeansPIP
             
             tmpLabel.Text = start.ToString("HH:mm") + " Uhr - " + System.Web.HttpUtility.HtmlDecode(summary);
         }
-        #endregion
+#endregion
 
 
     }
+
 
     public static class SHA1Util
     {

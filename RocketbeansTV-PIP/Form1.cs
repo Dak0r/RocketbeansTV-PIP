@@ -33,7 +33,6 @@ namespace RocketbeansPIP
         private bool activated = true;
         private bool toolbarHidden = false;
         private FormSendeplan formSendeplan;
-        private bool sendeplanActive = false;
 
 
         // Twitter isc currently not supported.
@@ -42,7 +41,7 @@ namespace RocketbeansPIP
 
         private int extraWidth = 300; //extra width used for calulating the perfect aspect ratio fot the stream, even with the chat displayed
 
-        private string channelName = "ROCKETBEANSTV";
+        private string channelName = "NorthernLStudios";//"ROCKETBEANSTV"; NorthernLStudios
         private string ytStreamid = "";
 
         private int ExtraWidth
@@ -62,24 +61,24 @@ namespace RocketbeansPIP
         #region StreamIDGetter
         private void GetFirstStreamId(string html)
         {
-            Regex regex = new Regex(@"(watch\?v=)\w+");
+            Regex regex = new Regex(@"(watch\?v=)[\w-_]+");
             Match match = regex.Match(html);
             string streamID = match.Value;
             streamID = streamID.Replace("watch?v=", "");
             if (streamID != ytStreamid)
             {
                 ytStreamid = streamID;
-              //  MessageBox.Show("new stream: "+ytStreamid);
+                //MessageBox.Show("new stream: "+ytStreamid);
                 RocketbeansPIP.Properties.Settings.Default["LastStreamId"] = ytStreamid;
                 RocketbeansPIP.Properties.Settings.Default.Save();
-                webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=1&showinfo=0&theme=dark&iv_load_policy=1");
+                webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=0&showinfo=0&theme=dark&iv_load_policy=1&fs=0");
                 webBrowserMovie.Refresh();
             }
             
             //return streamID;
         }
 
-        public void DownloadVersionNumber(string url)
+        public void DownloadYoutubeLivestreamList(string url)
         {
             WebClient webclient = null;
             try
@@ -88,7 +87,7 @@ namespace RocketbeansPIP
 
                 RemoteCertificateValidationCallback old = ServicePointManager.ServerCertificateValidationCallback;
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidRemoteCertificate);
-                webclient.DownloadStringCompleted += DownloadVersionNumberCompleted;
+                webclient.DownloadStringCompleted += DownloadYoutubeLivestreamListCompleted;
                 webclient.DownloadStringAsync(new Uri(url));
                 ServicePointManager.ServerCertificateValidationCallback = old;
 
@@ -99,16 +98,16 @@ namespace RocketbeansPIP
             }
             finally
             {
-                if (webclient != null)
-                {
-                    // webclient.Dispose();
-                    //  webclient = null;
-                }
+                //if (webclient != null)
+                //{
+                //    // webclient.Dispose();
+                //    //  webclient = null;
+                //}
             }
         }
 
 
-        public void DownloadVersionNumberCompleted(object sender, DownloadStringCompletedEventArgs e)
+        public void DownloadYoutubeLivestreamListCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             //byte[] raw = e.Result;
             if (e.Error == null)
@@ -117,7 +116,6 @@ namespace RocketbeansPIP
             }
             else
             {
-                //instance.lblVersion.Text = "Version: " + CURRENT_VERSION + " [O]";
                 MessageBox.Show("Connection error");
             }
             ((WebClient)sender).Dispose();
@@ -146,7 +144,7 @@ namespace RocketbeansPIP
             formSendeplan = new FormSendeplan();
             this.AddOwnedForm(formSendeplan);
 
-            DownloadVersionNumber("https://www.youtube.com/user/" + channelName + "/videos?sort=dd&view=2&shelf_id=4&live_view=501");
+            DownloadYoutubeLivestreamList("https://www.youtube.com/user/" + channelName + "/videos?sort=dd&view=2&shelf_id=4&live_view=501");
             // TWITCH PLAYERS
 
             // standard:
@@ -163,6 +161,7 @@ namespace RocketbeansPIP
 
 
             ytStreamid = (string)Properties.Settings.Default["LastStreamId"]; //get last stream id
+            //MessageBox.Show("new stream: " + ytStreamid);
             webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=0&showinfo=0&theme=dark&iv_load_policy=1&fs=0"); //iv_load_policy 3 = hide video notes
             webBrowserMovie.Refresh();
 
@@ -405,7 +404,6 @@ namespace RocketbeansPIP
                 this.TopMost = false;
                 tmrTopMost.Enabled = false;
                 formSendeplan.Show();
-                sendeplanActive = true;
                 Point mouse = MousePosition;
 
                 // The following code takes care, that schedule is never shown outside of the current screen!
@@ -452,7 +450,6 @@ namespace RocketbeansPIP
                 formSendeplan.Hide();
                 formSendeplan.TopMost = false;
             }
-            sendeplanActive = false;
             tmrTopMost.Enabled = false;
             resetTopMost();
             tmrGUI.Start();
@@ -658,7 +655,7 @@ namespace RocketbeansPIP
         #region Update Check
         private void lblVersion_Click(object sender, EventArgs e)
         {
-            Process.Start("http://forum.rocketbeans.tv/c/project/development");
+            Process.Start("https://forum.rocketbeans.tv/t/215");
         }
         private void tmrAsyncLoading_Tick(object sender, EventArgs e)
         {
@@ -697,7 +694,7 @@ namespace RocketbeansPIP
                 {
                     RocketbeansPIP.Properties.Settings.Default["LastNotifiedVersion"] = newestVersion;
                     RocketbeansPIP.Properties.Settings.Default.Save();
-                    MessageBox.Show("Eine neue Version ist verfügbar! Neuste Version " + newestVersion + Environment.NewLine + "Besuche das Rocketbeans Forum (http://forum.rocketbeans.tv/) um die neuste Version zu erhalten! (Oder klicke auf die Versions Nummer in der Anwendung)", "RocketbeansPIP - Update Verfügbar");
+                    MessageBox.Show("Eine neue Version ist verfügbar! Neuste Version " + newestVersion + Environment.NewLine + "Besuche das Rocketbeans Forum (https://forum.rocketbeans.tv/t/215) um die neuste Version zu erhalten! (Oder klicke auf die Versions Nummer in der Anwendung)", "RocketbeansPIP - Update Verfügbar");
 
                 }
             }

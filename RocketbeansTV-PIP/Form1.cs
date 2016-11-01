@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Dynamic;
-using System.Web.Helpers;
 using RocketbeansPIP.Properties;
 using System.Net.Security;
 using System.IO;
@@ -22,7 +21,7 @@ namespace RocketbeansPIP
     public partial class Form1 : Form, IMessageFilter
     {
         private static Form1 instance;
-        public const float  CURRENT_VERSION = 4.0f;
+        public const float CURRENT_VERSION = 4.3f;
 
         // Used for custom scaling method:
         private Point mouseposition;
@@ -41,7 +40,9 @@ namespace RocketbeansPIP
 
         private int extraWidth = 300; //extra width used for calulating the perfect aspect ratio fot the stream, even with the chat displayed
 
-        private string channelName = "NorthernLStudios";//"ROCKETBEANSTV"; NorthernLStudios
+        private DateTime lastViewerUpdate;
+
+        private string channelName = "ROCKETBEANSTV";//"ROCKETBEANSTV"; NorthernLStudios
         private string ytStreamid = "";
 
         private int ExtraWidth
@@ -61,10 +62,14 @@ namespace RocketbeansPIP
         #region StreamIDGetter
         private void GetFirstStreamId(string html)
         {
-            Regex regex = new Regex(@"(watch\?v=)[\w-_]+");
+
+            //Regex regex = new Regex(@"(watch\?v=)[\w-_]+");
+            Regex regex = new Regex("(watch\\?v=)[\\w-_]+(\" class=\"yt-uix-sessionlink\")");
             Match match = regex.Match(html);
             string streamID = match.Value;
             streamID = streamID.Replace("watch?v=", "");
+            streamID = streamID.Replace("\" class=\"yt-uix-sessionlink\"", "");
+            //MessageBox.Show(streamID);
             if (streamID != ytStreamid)
             {
                 ytStreamid = streamID;
@@ -73,12 +78,13 @@ namespace RocketbeansPIP
                 RocketbeansPIP.Properties.Settings.Default.Save();
                 webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=0&showinfo=0&theme=dark&iv_load_policy=1&fs=0");
                 webBrowserMovie.Refresh();
+                DownloadStringAsync("https://gaming.youtube.com/watch?v=" + ytStreamid, DownloadYoutubePageCompleted);
             }
-            
+
             //return streamID;
         }
 
-        public void DownloadYoutubeLivestreamList(string url)
+        public void DownloadStringAsync(string url, DownloadStringCompletedEventHandler oncomplete)
         {
             WebClient webclient = null;
             try
@@ -87,14 +93,14 @@ namespace RocketbeansPIP
 
                 RemoteCertificateValidationCallback old = ServicePointManager.ServerCertificateValidationCallback;
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidRemoteCertificate);
-                webclient.DownloadStringCompleted += DownloadYoutubeLivestreamListCompleted;
+                webclient.DownloadStringCompleted += oncomplete;
                 webclient.DownloadStringAsync(new Uri(url));
                 ServicePointManager.ServerCertificateValidationCallback = old;
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                // throw ex;
             }
             finally
             {
@@ -107,12 +113,43 @@ namespace RocketbeansPIP
         }
 
 
+        public void DownloadYoutubePageCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+
+            //byte[] raw = e.Result;
+            if (e.Error == null)
+            {
+                ParseForViewerCount(e.Result);
+            }
+            else
+            {
+
+            }
+            ((WebClient)sender).Dispose();
+
+        }
+
+        private void ParseForViewerCount(string html)
+        {
+            lastViewerUpdate = DateTime.Now;
+            Regex regex = new Regex(@"[0-9,.](.+)((watching)|(Zuschauer))");
+            Regex regexNumber = new Regex(@"[0-9,.]*");
+            Match match = regex.Match(html);
+
+            //viewerParsed = viewerParsed.Replace("watching", "");
+            //viewerParsed = viewerParsed.Replace("Zuschauer", "");
+            Match matchNumber = regexNumber.Match(match.Value);
+            string viewerParsed = matchNumber.Value;
+            lbl_zuschauer.Text = "Zuschauer: " + viewerParsed;
+        }
+
         public void DownloadYoutubeLivestreamListCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             //byte[] raw = e.Result;
             if (e.Error == null)
             {
                 GetFirstStreamId(e.Result);
+                ParseForViewerCount(e.Result);
             }
             else
             {
@@ -129,7 +166,7 @@ namespace RocketbeansPIP
             instance = this;
             SetBrowserFeatureControl();
             InitializeComponent();
-
+            lastViewerUpdate = DateTime.Now;
 
             // Register Handlers to detect mouse over, mouse leaving, mouse entering etc!
             // The Forms handlers don't detect mouse events in children
@@ -144,7 +181,8 @@ namespace RocketbeansPIP
             formSendeplan = new FormSendeplan();
             this.AddOwnedForm(formSendeplan);
 
-            DownloadYoutubeLivestreamList("https://www.youtube.com/user/" + channelName + "/videos?sort=dd&view=2&shelf_id=4&live_view=501");
+            DownloadStringAsync("https://www.youtube.com/user/" + channelName + "/videos?sort=dd&view=2&shelf_id=4&live_view=501", DownloadYoutubeLivestreamListCompleted);
+
             // TWITCH PLAYERS
 
             // standard:
@@ -161,9 +199,14 @@ namespace RocketbeansPIP
 
 
             ytStreamid = (string)Properties.Settings.Default["LastStreamId"]; //get last stream id
-            //MessageBox.Show("new stream: " + ytStreamid);
-            webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=0&showinfo=0&theme=dark&iv_load_policy=1&fs=0"); //iv_load_policy 3 = hide video notes
-            webBrowserMovie.Refresh();
+            if (ytStreamid != null && ytStreamid.Length > 0)
+            {
+                // MessageBox.Show("new stream: " + ytStreamid);
+                webBrowserMovie.Url = new Uri("https://gaming.youtube.com/embed/" + ytStreamid + "/?autoplay=1&vq=hd1080&modestbranding=0&showinfo=0&theme=dark&iv_load_policy=1&fs=0"); //iv_load_policy 3 = hide video notes
+                webBrowserMovie.Refresh();
+            }
+
+            //    DownloadStringAsync("https://www.youtube.com/user/"+ channelName + "/videos?view=2&live_view=501&flow=grid", DownloadYoutubePageCompleted);
 
             //
 
@@ -201,7 +244,8 @@ namespace RocketbeansPIP
 
         private int ChatState
         {
-            get {
+            get
+            {
                 return chatState;
             }
             set
@@ -224,7 +268,7 @@ namespace RocketbeansPIP
                     ExtraWidth = 300;
                     //webBrowserChat.Url = new Uri("http://www.twitch.tv/rocketbeanstv/chat?popout=");
                     //webBrowserChat.Url = new Uri("https://www.youtube.com/live_chat?v="+ytStreamid);
-                    webBrowserChat.Url = new Uri("https://www.youtube.com/live_chat?v="+ytStreamid+"&from_gaming=1&dark_theme=1&is_popout=1");
+                    webBrowserChat.Url = new Uri("https://www.youtube.com/live_chat?v=" + ytStreamid + "&from_gaming=1&dark_theme=1&is_popout=1");
                     btnTwitchChat.BackgroundImage = Resources.twitchchat1;//Resources.iconChatTwitch;
                     webBrowserChat.ScrollBarsEnabled = false;
                     webBrowserChat.IsWebBrowserContextMenuEnabled = false;
@@ -257,7 +301,7 @@ namespace RocketbeansPIP
                     toolbarHidden = value;
                     if (toolbarHidden)
                     {
-                      //  webBrowserMovie.Height += 31;
+                        //  webBrowserMovie.Height += 31;
                         if (chatState == 1)
                         {
                             // webBrowser1.Height += 135;
@@ -271,7 +315,7 @@ namespace RocketbeansPIP
                     }
                     else
                     {
-                      //  webBrowserMovie.Height -= 31;
+                        //  webBrowserMovie.Height -= 31;
                         if (chatSizeState == 1)
                         {
                             //   webBrowser1.Height -= 135;
@@ -393,6 +437,11 @@ namespace RocketbeansPIP
         {
             etcPanel.Visible = menuPanel.Visible;
             HideToolbar = !menuPanel.Visible;
+            if (menuPanel.Visible && lastViewerUpdate.AddMinutes(5) < DateTime.Now)
+            {
+                lastViewerUpdate = DateTime.Now;
+                DownloadStringAsync("https://www.youtube.com/user/" + channelName + "/videos?view=2&live_view=501&flow=grid", DownloadYoutubePageCompleted);
+            }
         }
 
         #region Display Schedule
@@ -667,7 +716,7 @@ namespace RocketbeansPIP
         public void CheckForUpdates()
         {
             lblVersion.Text = "Version: " + CURRENT_VERSION + " (Prüfe auf Updates)";
-            DownloadFileFromDropbox("https://www.dropbox.com/s/tiaz217ftqsocki/currentVersion.txt?dl=1");
+            DownloadFileFromDropbox("http://behindvr.com/dl/RocketbeansTV_PIP/version.txt");
 
         }
 
@@ -682,6 +731,7 @@ namespace RocketbeansPIP
             try
             {
                 newestVersion = float.Parse(newVersion);
+
             }
             catch (Exception)
             {
@@ -900,6 +950,16 @@ namespace RocketbeansPIP
             return mode;
         }
         #endregion
+
+        private void btnMove_MouseHover(object sender, EventArgs e)
+        {
+            tmrGUI.Stop();
+        }
+
+        private void btnMove_MouseLeave(object sender, EventArgs e)
+        {
+            tmrGUI.Start();
+        }
     }
 
 

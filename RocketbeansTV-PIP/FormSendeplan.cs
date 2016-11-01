@@ -329,9 +329,13 @@ namespace RocketbeansPIP
             
             tmpLabel.Text = start.ToString("HH:mm") + " Uhr - " + System.Web.HttpUtility.HtmlDecode(summary);
         }
-#endregion
 
+        #endregion
 
+        private void FormSendeplan_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 

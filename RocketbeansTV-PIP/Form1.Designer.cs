@@ -47,6 +47,7 @@ namespace RocketbeansPIP
             this.tmrAsyncLoading = new System.Windows.Forms.Timer(this.components);
             this.webBrowserChat = new System.Windows.Forms.WebBrowser();
             this.webBrowserMovie = new System.Windows.Forms.WebBrowser();
+            this.lbl_zuschauer = new System.Windows.Forms.Label();
             this.etcPanel.SuspendLayout();
             this.menuPanel.SuspendLayout();
             this.SuspendLayout();
@@ -96,6 +97,8 @@ namespace RocketbeansPIP
             this.menuPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.menuPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.menuPanel.BackgroundImage = global::RocketbeansPIP.Properties.Resources.twitchBG_neu;
+            this.menuPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.menuPanel.Controls.Add(this.lbl_zuschauer);
             this.menuPanel.Controls.Add(this.btnMove);
             this.menuPanel.Controls.Add(this.btnTwitchChat);
             this.menuPanel.Controls.Add(this.btnSendeplan);
@@ -107,7 +110,7 @@ namespace RocketbeansPIP
             this.menuPanel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.menuPanel.Location = new System.Drawing.Point(0, 0);
             this.menuPanel.Name = "menuPanel";
-            this.menuPanel.Size = new System.Drawing.Size(650, 42);
+            this.menuPanel.Size = new System.Drawing.Size(650, 57);
             this.menuPanel.TabIndex = 2;
             this.menuPanel.VisibleChanged += new System.EventHandler(this.menuPanel_VisibleChanged);
             // 
@@ -127,6 +130,8 @@ namespace RocketbeansPIP
             this.btnMove.TabIndex = 3;
             this.btnMove.Text = "RocketbeansTV PIP";
             this.btnMove.UseVisualStyleBackColor = false;
+            this.btnMove.MouseLeave += new System.EventHandler(this.btnMove_MouseLeave);
+            this.btnMove.MouseHover += new System.EventHandler(this.btnMove_MouseHover);
             // 
             // btnTwitchChat
             // 
@@ -269,6 +274,18 @@ namespace RocketbeansPIP
             this.webBrowserMovie.Size = new System.Drawing.Size(518, 395);
             this.webBrowserMovie.TabIndex = 7;
             // 
+            // lbl_zuschauer
+            // 
+            this.lbl_zuschauer.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_zuschauer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lbl_zuschauer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_zuschauer.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lbl_zuschauer.Location = new System.Drawing.Point(52, 40);
+            this.lbl_zuschauer.Name = "lbl_zuschauer";
+            this.lbl_zuschauer.Size = new System.Drawing.Size(108, 17);
+            this.lbl_zuschauer.TabIndex = 12;
+            this.lbl_zuschauer.Text = "Zuschauer: Lädt.";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -311,6 +328,7 @@ namespace RocketbeansPIP
         private System.Windows.Forms.Timer tmrAsyncLoading;
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.WebBrowser webBrowserMovie;
+        private System.Windows.Forms.Label lbl_zuschauer;
     }
 }
 

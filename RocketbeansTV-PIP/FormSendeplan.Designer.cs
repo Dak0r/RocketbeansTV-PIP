@@ -107,6 +107,7 @@
             this.Name = "FormSendeplan";
             this.ShowInTaskbar = false;
             this.Text = "FormSendeplan";
+            this.Load += new System.EventHandler(this.FormSendeplan_Load);
             this.VisibleChanged += new System.EventHandler(this.FormSendeplan_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();

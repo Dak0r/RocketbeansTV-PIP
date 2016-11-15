@@ -21,7 +21,7 @@ namespace RocketbeansPIP
     public partial class Form1 : Form, IMessageFilter
     {
         private static Form1 instance;
-        public const float CURRENT_VERSION = 4.3f;
+        public const float CURRENT_VERSION = 4.4f;
 
         // Used for custom scaling method:
         private Point mouseposition;
@@ -453,6 +453,7 @@ namespace RocketbeansPIP
                 this.TopMost = false;
                 tmrTopMost.Enabled = false;
                 formSendeplan.Show();
+                formSendeplan.TopMost = true;
                 Point mouse = MousePosition;
 
                 // The following code takes care, that schedule is never shown outside of the current screen!

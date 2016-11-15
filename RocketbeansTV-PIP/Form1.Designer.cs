@@ -36,6 +36,7 @@ namespace RocketbeansPIP
             this.etcPanel = new System.Windows.Forms.Panel();
             this.btnScale = new System.Windows.Forms.Button();
             this.menuPanel = new System.Windows.Forms.Panel();
+            this.lbl_zuschauer = new System.Windows.Forms.Label();
             this.btnMove = new System.Windows.Forms.Button();
             this.btnTwitchChat = new System.Windows.Forms.Button();
             this.btnSendeplan = new System.Windows.Forms.Button();
@@ -47,7 +48,6 @@ namespace RocketbeansPIP
             this.tmrAsyncLoading = new System.Windows.Forms.Timer(this.components);
             this.webBrowserChat = new System.Windows.Forms.WebBrowser();
             this.webBrowserMovie = new System.Windows.Forms.WebBrowser();
-            this.lbl_zuschauer = new System.Windows.Forms.Label();
             this.etcPanel.SuspendLayout();
             this.menuPanel.SuspendLayout();
             this.SuspendLayout();
@@ -113,6 +113,18 @@ namespace RocketbeansPIP
             this.menuPanel.Size = new System.Drawing.Size(650, 57);
             this.menuPanel.TabIndex = 2;
             this.menuPanel.VisibleChanged += new System.EventHandler(this.menuPanel_VisibleChanged);
+            // 
+            // lbl_zuschauer
+            // 
+            this.lbl_zuschauer.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_zuschauer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lbl_zuschauer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_zuschauer.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lbl_zuschauer.Location = new System.Drawing.Point(52, 40);
+            this.lbl_zuschauer.Name = "lbl_zuschauer";
+            this.lbl_zuschauer.Size = new System.Drawing.Size(108, 17);
+            this.lbl_zuschauer.TabIndex = 12;
+            this.lbl_zuschauer.Text = "Zuschauer: Lädt.";
             // 
             // btnMove
             // 
@@ -270,21 +282,10 @@ namespace RocketbeansPIP
             this.webBrowserMovie.Location = new System.Drawing.Point(0, 0);
             this.webBrowserMovie.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowserMovie.Name = "webBrowserMovie";
+            this.webBrowserMovie.ScriptErrorsSuppressed = true;
             this.webBrowserMovie.ScrollBarsEnabled = false;
             this.webBrowserMovie.Size = new System.Drawing.Size(518, 395);
             this.webBrowserMovie.TabIndex = 7;
-            // 
-            // lbl_zuschauer
-            // 
-            this.lbl_zuschauer.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_zuschauer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lbl_zuschauer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_zuschauer.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.lbl_zuschauer.Location = new System.Drawing.Point(52, 40);
-            this.lbl_zuschauer.Name = "lbl_zuschauer";
-            this.lbl_zuschauer.Size = new System.Drawing.Size(108, 17);
-            this.lbl_zuschauer.TabIndex = 12;
-            this.lbl_zuschauer.Text = "Zuschauer: Lädt.";
             // 
             // Form1
             // 
